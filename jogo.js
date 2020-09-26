@@ -67,6 +67,10 @@ const flappyBird = {
     altura: 24,
     x: 10,
     y: 50,
+    pulo: 4.6,
+    pula() {
+        flappyBird.velocidade = - flappyBird.pulo
+    },
     velocidade: 0,
     gravidade:0.25,
     atualiza() {
@@ -133,6 +137,9 @@ Telas.JOGO = {
         chao.desenha()
         flappyBird.desenha()
     }, 
+    click() {
+        flappyBird.pula()
+    },
     atualiza() {
         flappyBird.atualiza()
     }
