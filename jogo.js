@@ -84,11 +84,11 @@ const flappyBird = {
     gravidade:0.25,
     velocidade: 0,
     atualiza() {
-        if(fazColisao(flappyBird, chao)) {
+        if(FazColisao(flappyBird, chao)) {
             console.log('fez colisão')
             return 
         }
-        
+
         flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade
         flappyBird.y = flappyBird.y + flappyBird.velocidade 
 
