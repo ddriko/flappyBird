@@ -60,6 +60,16 @@ const chao = {
     
 }
 
+function FazColisao(flappyBird, chao) {
+    const flappyBirdY = flappyBird.y + flappyBird.altura
+    const chaoY = chao.y
+
+    if(flappyBirdY >= chaoY) {
+        return true
+    }
+    return false 
+}
+
 const flappyBird = {
     spriteX: 0, 
     spriteY: 0, 
@@ -71,9 +81,14 @@ const flappyBird = {
     pula() {
         flappyBird.velocidade = - flappyBird.pulo
     },
-    velocidade: 0,
     gravidade:0.25,
+    velocidade: 0,
     atualiza() {
+        if(fazColisao(flappyBird, chao)) {
+            console.log('fez colisão')
+            return 
+        }
+        
         flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade
         flappyBird.y = flappyBird.y + flappyBird.velocidade 
 
