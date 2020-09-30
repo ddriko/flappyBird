@@ -36,13 +36,21 @@ const planoDeFundo = {
         }
 }
 
-const chao = {
+function criaChao() {
+   const chao = {
     spriteX: 0, 
     spriteY: 610, 
     largura: 224,
     altura: 112,
     x: 0,
     y: canvas.height - 112,
+    atualiza() {
+        const movimentoDoChao = 1
+        const repeteEm = chao.largura / 2
+        const movimentacao = chao.x - movimentoDoChao
+
+        chao.x = movimentacao % repeteEm
+    },
     desenha() {
         context.drawImage(
            sprites,
@@ -61,6 +69,8 @@ const chao = {
         )
     }
     
+} 
+return chao
 }
 
 function FazColisao(flappyBird, chao) {
@@ -116,7 +126,6 @@ function criaFlappyBird(){
     return flappyBird
 }
 
-
 const getReady = {
     spriteX: 134, 
     spriteY: 0, 
@@ -150,18 +159,19 @@ const Telas = {
     INICIO:  {
         inicializa() {
             globais.flappyBird = criaFlappyBird()
-
+            globais.chao = criaChao()
         },
         desenha() {
             planoDeFundo.desenha()
-            chao.desenha()
+            globais.chao.desenha()
             globais.flappyBird.desenha()
             getReady.desenha()
         },
         click() {
             mudaParaTela(Telas.JOGO)
         },
-        atualiza(){
+        atualiza() {
+            globais.chao.atualiza()
         }
     }
 }
@@ -169,14 +179,15 @@ const Telas = {
 Telas.JOGO = {
     desenha() {
         planoDeFundo.desenha()
-        chao.desenha()
+        globais.chao.desenha()
         globais.flappyBird.desenha()
     }, 
     click() {
         globais.flappyBird.pula()
     },
     atualiza() {
-        globais.flappyBird.atualiza()
+        globais.chao.atualiza()
+
     }
 }
 
