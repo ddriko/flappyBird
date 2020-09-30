@@ -1,3 +1,6 @@
+const somDe_Hit = new Audio()
+somDe_Hit.src = './efeitos/hit.wav'
+
 const sprites = new Image()
 sprites.src = './sprites.png'
 
@@ -70,7 +73,8 @@ function FazColisao(flappyBird, chao) {
     return false 
 }
 
-const flappyBird = {
+function criaFlappyBird(){
+    const flappyBird = {
     spriteX: 0, 
     spriteY: 0, 
     largura: 33,
@@ -86,6 +90,11 @@ const flappyBird = {
     atualiza() {
         if(FazColisao(flappyBird, chao)) {
             console.log('fez colisão')
+
+            somDe_Hit.play()
+            setTimeout(() => {
+                mudaParaTela(Telas.INICIO)
+            }, 500) 
             return 
         }
 
@@ -97,13 +106,16 @@ const flappyBird = {
     desenha() {
         context.drawImage(
             sprites,
-           flappyBird.spriteX, flappyBird.spriteY,
-           flappyBird.largura, flappyBird.altura,
-           flappyBird.x, flappyBird.y,
-           flappyBird.largura, flappyBird.altura,
+            flappyBird.spriteX, flappyBird.spriteY,
+            flappyBird.largura, flappyBird.altura,
+            flappyBird.x, flappyBird.y,
+            flappyBird.largura, flappyBird.altura,
         )
     }
+    } 
+    return flappyBird
 }
+
 
 const getReady = {
     spriteX: 134, 
@@ -124,18 +136,26 @@ const getReady = {
     
 }
 
+const globais = {}
 let telaAtiva = {}
-
 function mudaParaTela (novaTela) {
     telaAtiva = novaTela
+
+    if(telaAtiva.inicializa) {
+         telaAtiva.inicializa()    
+    }
 }
 
 const Telas = {
-    INICIO: {
+    INICIO:  {
+        inicializa() {
+            globais.flappyBird = criaFlappyBird()
+
+        },
         desenha() {
             planoDeFundo.desenha()
             chao.desenha()
-            flappyBird.desenha()
+            globais.flappyBird.desenha()
             getReady.desenha()
         },
         click() {
@@ -150,13 +170,13 @@ Telas.JOGO = {
     desenha() {
         planoDeFundo.desenha()
         chao.desenha()
-        flappyBird.desenha()
+        globais.flappyBird.desenha()
     }, 
     click() {
-        flappyBird.pula()
+        globais.flappyBird.pula()
     },
     atualiza() {
-        flappyBird.atualiza()
+        globais.flappyBird.atualiza()
     }
 }
 
@@ -176,3 +196,5 @@ window.addEventListener('click', function() {
 
 mudaParaTela(Telas.INICIO)
 loop()
+
+
