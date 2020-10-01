@@ -1,3 +1,4 @@
+let frames = 0
 const somDe_Hit = new Audio()
 somDe_Hit.src = './efeitos/hit.wav'
 
@@ -98,7 +99,7 @@ function criaFlappyBird(){
     gravidade:0.25,
     velocidade: 0,
     atualiza() {
-        if(FazColisao(flappyBird, chao)) {
+        if(FazColisao(flappyBird, globais.chao)) {
             console.log('fez colisão')
 
             somDe_Hit.play()
@@ -110,13 +111,34 @@ function criaFlappyBird(){
 
         flappyBird.velocidade = flappyBird.velocidade + flappyBird.gravidade
         flappyBird.y = flappyBird.y + flappyBird.velocidade 
-
         // console.log(flappyBird.velocidade)
     },
+    movimentos: [
+        {spriteX: 0, spriteY: 0, }, // asa pra cima
+        {spriteX: 0, spriteY: 26, }, // asa no meio
+        {spriteX: 0, spriteY: 52, }, // asa pra baixo
+        {spriteX: 0, spriteY: 26, } // asa no meio
+
+    ],
+    frameAtual: 0,
+    atualizaFrame() {
+        const intervaloDeFrames = 10
+        const passouOIntervalo = frames % intervaloDeFrames === 0
+
+        if(passouOIntervalo) {
+            const baseDoIncremento = 1
+            const incremento = baseDoIncremento + flappyBird.frameAtual
+            const baseRepeticao = flappyBird.movimentos.length
+            flappyBird.frameAtual = incremento % baseRepeticao
+        }
+        
+    },
     desenha() {
+        flappyBird.atualizaFrame()
+        const { spriteX, spriteY } = flappyBird.movimentos[flappyBird.frameAtual]
         context.drawImage(
             sprites,
-            flappyBird.spriteX, flappyBird.spriteY,
+            spriteX, spriteY,
             flappyBird.largura, flappyBird.altura,
             flappyBird.x, flappyBird.y,
             flappyBird.largura, flappyBird.altura,
@@ -187,6 +209,7 @@ Telas.JOGO = {
     },
     atualiza() {
         globais.chao.atualiza()
+        globais.flappyBird.atualiza();
 
     }
 }
@@ -196,6 +219,7 @@ function loop() {
     telaAtiva.desenha()
     telaAtiva.atualiza()
 
+    frames = frames + 1
     requestAnimationFrame(loop)
 }
 
